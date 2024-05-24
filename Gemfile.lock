@@ -88,9 +88,27 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     drb (2.2.1)
+    elasticsearch (7.17.10)
+      elasticsearch-api (= 7.17.10)
+      elasticsearch-transport (= 7.17.10)
+    elasticsearch-api (7.17.10)
+      multi_json
+    elasticsearch-model (7.2.1)
+      activesupport (> 3)
+      elasticsearch (~> 7)
+      hashie
+    elasticsearch-rails (7.2.1)
+    elasticsearch-transport (7.17.10)
+      faraday (>= 1, < 3)
+      multi_json
     erubi (1.12.0)
+    faraday (2.9.0)
+      faraday-net_http (>= 2.0, < 3.2)
+    faraday-net_http (3.1.0)
+      net-http
     globalid (1.2.1)
       activesupport (>= 6.1)
+    hashie (5.0.0)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
@@ -109,8 +127,11 @@ GEM
     mini_mime (1.1.5)
     minitest (5.23.1)
     msgpack (1.7.2)
+    multi_json (1.15.0)
     mutex_m (0.2.0)
     mysql2 (0.5.6)
+    net-http (0.4.1)
+      uri
     net-imap (0.4.11)
       date
       net-protocol
@@ -178,13 +199,22 @@ GEM
     rake (13.2.1)
     rdoc (6.7.0)
       psych (>= 4.0.0)
+    redis (4.8.1)
+    redis-client (0.22.2)
+      connection_pool
     reline (0.5.7)
       io-console (~> 0.5)
+    sidekiq (7.2.4)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.19.0)
     stringio (3.1.0)
     thor (1.3.1)
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uri (0.13.0)
     webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -202,9 +232,13 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  elasticsearch-model
+  elasticsearch-rails
   mysql2 (~> 0.5)
   puma (>= 5.0)
   rails (~> 7.1.3, >= 7.1.3.3)
+  redis (>= 4.0.1)
+  sidekiq
   tzinfo-data
 
 RUBY VERSION
