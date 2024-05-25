@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   # root "posts#index"
   resources :applications, param: :token do
     resources :chats, param: :number do
-      resources :messages, param: :number
+      resources :messages, param: :number do
+        collection do
+          get 'search', to: 'messages#search'
+        end
+      end
     end
   end
 end

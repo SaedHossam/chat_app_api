@@ -5,24 +5,19 @@ class ChatsController < ApplicationController
     # GET /applications/:application_token/chats
     def index
       @chats = @application.chats
-      render json: @chats.map { |chat| { number: chat.number } }
+      render json: @chats.map { |chat| selected_attributes_for_chat(chat) }
     end
   
     # GET /applications/:application_token/chats/:number
     def show
-      render json: { number: @chat.number }
+      render json: selected_attributes_for_chat(@chat)
     end
   
     # POST /applications/:application_token/chats
     def create
-      max_chat_number = @application.chats.maximum(:number) || 0
-      chat_number = max_chat_number + 1
-    
-      chat = @application.chats.create(chat_params.merge(number: chat_number))
-
+      chat = @application.chats.create(chat_params)
       if chat.persisted?
-        enqueue_update_chats_count
-        render json: chat, status: :created
+        render json: selected_attributes_for_chat(chat), status: :created
       else
         render json: chat.errors, status: :unprocessable_entity
       end
@@ -31,7 +26,7 @@ class ChatsController < ApplicationController
     # PATCH/PUT /applications/:application_token/chats/:number
     def update
       if @chat.update(chat_params)
-        render json: @chat
+        render json: selected_attributes_for_chat(@chat)
       else
         render json: @chat.errors, status: :unprocessable_entity
       end
@@ -39,8 +34,9 @@ class ChatsController < ApplicationController
   
     # DELETE /applications/:application_token/chats/:number
     def destroy
-      enqueue_update_chats_count
       @chat.destroy
+      enqueue_update_chats_count
+      render json: {message: "Deleted"}
     end
   
     private
@@ -58,7 +54,7 @@ class ChatsController < ApplicationController
       params.require(:chat).permit(:name)
     end
 
-    def enqueue_update_chats_count
-      UpdateChatsCountWorker.perform_async(@application.id)
+    def selected_attributes_for_chat(chat)
+      chat.slice(:number, :name)
     end
 end
