@@ -55,6 +55,6 @@ class ChatsController < ApplicationController
     end
 
     def selected_attributes_for_chat(chat)
-      chat.slice(:number, :name)
+      chat.slice(:number, :name, :messages_count)
     end
 end

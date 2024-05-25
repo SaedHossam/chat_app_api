@@ -4,12 +4,12 @@ class ApplicationsController < ApplicationController
     # GET /applications
     def index
       @applications = Application.all
-      render json: @applications.map { |app| { name: app.name, token: app.token } }
+      render json: @applications.map { |app| selected_attributes_for_application(app) }
     end
   
     # GET /applications/:token
     def show
-      render json: {name: @application.name, token: @application.token, chats_count: @application.chats_count}
+      render json: selected_attributes_for_application(@application)
     end
   
     # POST /applications
@@ -17,7 +17,7 @@ class ApplicationsController < ApplicationController
       @application = Application.new(application_params)
   
       if @application.save
-        render json: {token: @application.token}, status: :created
+        render json: selected_attributes_for_application(@application), status: :created
       else
         render json: @application.errors, status: :unprocessable_entity
       end
@@ -26,7 +26,7 @@ class ApplicationsController < ApplicationController
     # PATCH/PUT /applications/:token
     def update
       if @application.update(application_params)
-        render json: @application
+        render json: selected_attributes_for_application(@application)
       else
         render json: @application.errors, status: :unprocessable_entity
       end
@@ -47,5 +47,9 @@ class ApplicationsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def application_params
       params.require(:application).permit(:name)
+    end
+
+    def selected_attributes_for_application(application)
+      application.slice(:token, :name, :chats_count)
     end
 end
