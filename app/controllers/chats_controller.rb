@@ -54,7 +54,6 @@ class ChatsController < ApplicationController
     end
 
     def create_new_chat(name)
-      # Initialize a logger
       key = "last_chat_count_#{@application.token}"
       retry_count = 0
       max_retries = 5
@@ -109,7 +108,6 @@ class ChatsController < ApplicationController
     end
 
     def delete_chat
-      logger = Logger.new(STDOUT)
       key = "last_chat_count_#{@application.token}"
       # Read the current value of the key
       last_chat_count = $redis.get(key).to_i || @application.chats.maximum(:number) || 0
@@ -124,11 +122,9 @@ class ChatsController < ApplicationController
           pipeline.sadd?("chat_count", @application.token)
           pipeline.set(@application.token, 0) unless pipeline.get(@application.token)
           pipeline.decr(@application.token)
-          logger.info("Decremented chat count for #{@application.token}")
         end
         last_chat_count
-        rescue Redis::CommandError => e
-          logger.error("Failed to decrement chat count: #{e.message}")
+        rescue Redis::CommandError
           retry_count += 1
           if retry_count < max_retries
             sleep_time = base_sleep_time * (2 ** retry_count)
