@@ -1,2 +1,2 @@
 # config/initializers/redis.rb
-$redis = Redis.new(host: 'localhost', port: 6379, db: 0)
+$redis = Redis.new(host: 'redis', port: 6379, db: 0)

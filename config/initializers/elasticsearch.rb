@@ -1,5 +1,5 @@
 # config/initializers/elasticsearch.rb
-Elasticsearch::Model.client = Elasticsearch::Client.new(url: 'http://localhost:9200', log: true)
+Elasticsearch::Model.client = Elasticsearch::Client.new(url: 'http://elasticsearch:9200', log: true)
 
 # Create the index with the necessary mapping
 client = Elasticsearch::Model.client
